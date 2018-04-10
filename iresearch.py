@@ -27,22 +27,22 @@ class crawl:
 
     ##初始化变量
     def __init__(self):
-        self.host='http://report.iresearch.cn/'
-        self.headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.103 Safari/537.36'}
-        self.cookie={'Set-Cookie' : ''}
-        self.type_vid_map= {'媒体营销': '59', '网络服务': '60', '文化娱乐': '61', '医疗': '62', '教育': '63', '云服务': '64',
-            '体育': '66', '工具与技术': '67', '房产': '68', '智能硬件': '69', '金融': '70',
-            '航天航空': '72', '零售': '73', 'B2B': '74', '物流': '75', '旅游': '76',
-           '生活服务': '77', '物联网': '78', '用户洞察': '79'}
+        self.host = 'http://report.iresearch.cn/'
+        self.headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.103 Safari/537.36'}
+        self.cookie = {'Set-Cookie': ''}
+        self.type_vid_map = {'媒体营销': '59', '网络服务': '60', '文化娱乐': '61', '医疗': '62', '教育': '63', '云服务': '64',
+                             '体育': '66', '工具与技术': '67', '房产': '68', '智能硬件': '69', '金融': '70',
+                             '航天航空': '72', '零售': '73', 'B2B': '74', '物流': '75', '旅游': '76',
+                             '生活服务': '77', '物联网': '78', '用户洞察': '79'}
         ##人工智能&&农业测试不通过？
-        self.vid_type_map=  {value: key for key,value in self.type_vid_map.items()}
-        self.article_base_address= self.host + 'include/ajax/user_ajax.ashx?reportid=<?aid?>&work=rdown&url=http%3A%2F%2Freport.iresearch.cn%2Freport%2F201803%2F<?aid?>.shtml'
+        self.vid_type_map = {value: key for key, value in self.type_vid_map.items()}
+        self.article_base_address = self.host + 'include/ajax/user_ajax.ashx?reportid=<?aid?>&work=rdown&url=http%3A%2F%2Freport.iresearch.cn%2Freport%2F201803%2F<?aid?>.shtml'
         self.login_request = 'http://center.iresearch.cn/ajax/process.ashx?work=login&uAccount=2560513293%40qq.com&uPassword=hahaha123456&days=15&t=0.24829489579742514'
-        self.save_dir='/home/admin/iresearch/'
-        self.dbu= crawl.db()
-        self.log_dir='/home/admin/iresearch/log/'
-        self.log_file='log.log'
-
+        self.save_dir = '/home/admin/iresearch/'
+        self.dbu = crawl.db()
+        self.log_dir = '/home/admin/iresearch/log/'
+        self.log_file = 'log.log'
 
     ##get_tuplelist('媒体营销')
     def get_tuplelist(self, type):
@@ -66,7 +66,9 @@ class crawl:
             if (aaa.string is None):
                 a.remove(aaa)
         for (aaa, ppp) in zip(a, p):
-            list.append((int(self.type_vid_map[type]),str(time.strftime('%Y/%m/%d',time.localtime(time.time()))),self.get_rs_addr(aaa.get('href')),aaa.string,'iresearch','iresearch',ppp.string,self.save_dir+aaa.string+'.pdf'))
+            list.append((int(self.type_vid_map[type]), str(time.strftime('%Y/%m/%d', time.localtime(time.time()))),
+                         self.get_rs_addr(aaa.get('href')), aaa.string, 'iresearch', 'iresearch', ppp.string,
+                         self.save_dir + aaa.string + '.pdf'))
             '''
             self.type_vid_map[type]                |   ind_id
             self.nowDate                           |   ind_date
@@ -79,52 +81,50 @@ class crawl:
             '''
         return list
 
-
     ##get_rs_addr('http://report.iresearch.cn/report/201803/3185.shtml')
-    def get_rs_addr(self,aaddr):
+    def get_rs_addr(self, aaddr):
         aid = os.path.basename(aaddr).replace('.shtml', '')
         return self.host + 'include/ajax/user_ajax.ashx?reportid=<?aid?>&work=rdown&url=http%3A%2F%2Freport.iresearch.cn%2Freport%2F201803%2F<?aid?>.shtml'.replace(
             '<?aid?>', aid)
 
     ##download_rs('http://report.iresearch.cn/report/201803/3184.shtml', '/users/zspirytus/desktop/', '3184.pdf')
-    def download_rs(self,rs_down_addr, dir, file_name, retries=3):
+    def download_rs(self, rs_down_addr, dir, file_name, retries=3):
         session = requests.session()
         session.get(self.login_request)
-        rs = session.get(rs_down_addr,headers= self.headers)
-        if(os.path.exists(dir + file_name)):
+        rs = session.get(rs_down_addr, headers=self.headers)
+        if (os.path.exists(dir + file_name)):
             return;
         try:
-            if(os.path.exists(dir) is False):
+            if (os.path.exists(dir) is False):
                 os.makedirs(dir)
             with open(dir + file_name, 'wb') as f:
                 f.write(rs.content)
         except:
             print('error!')
             if (retries > 0):
-                self.download_rs(self,rs_down_addr, dir, file_name, retries - 1)
+                self.download_rs(self, rs_down_addr, dir, file_name, retries - 1)
 
     def download_all_rs(self):
-        db_op=self.dbu
-        sql='Select url,picture from industry_data_list'
-        results=db_op.select(sql)
+        db_op = self.dbu
+        sql = 'Select url,picture from industry_data_list'
+        results = db_op.select(sql)
         for r in results:
             file_name = os.path.basename(r[1])
-            dir = r[1].replace(file_name,'').rstrip("\\")
+            dir = r[1].replace(file_name, '').rstrip("\\")
             self.download_rs(r[0], dir, file_name)
         self.log('download all resource')
 
-
     def op_db(self):
         sql = 'Select title From industry_data_list'
-        ts=self.dbu.select(sql)
+        ts = self.dbu.select(sql)
         for key in self.vid_type_map.keys():
             ls = self.get_tuplelist(self.vid_type_map[key])
             for l in ls:
                 try:
                     ##print(l)
-                    if(l[3] in l):
+                    if (l[3] in l):
                         continue
-                    sql='Insert into industry_data_list(ind_id,ind_date,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')'%l
+                    sql = 'Insert into industry_data_list(ind_id,ind_date,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')' % l
                     ##print(sql)
                     '''
                     ind_id      |   行业id
@@ -142,23 +142,22 @@ class crawl:
             time.sleep(random.random())
         self.log('updated database')
 
-
     def init_db(self):
-        db_op=self.dbu
+        db_op = self.dbu
         for key in self.vid_type_map.keys():
             try:
-                sql = 'Insert into industry_list(ind_id,ind_name,ind_text) value(%d,\'%s\',\'\')' % (int(key), self.vid_type_map[key])
+                sql = 'Insert into industry_list(ind_id,ind_name,ind_text) value(%d,\'%s\',\'\')' % (
+                int(key), self.vid_type_map[key])
                 print(sql)
                 db_op.executeUpdate(sql)
             except pymysql.err.IntegrityError as e:
                 print(e)
 
-    def log(self,text):
-        if(os.path.exists(self.log_dir + self.log_file) is False):
-            os.mknod(self.log_dir + self.log_file,'rw')
-        with open(self.log_dir + self.log_file,'a+') as logFile:
-            logFile.write(text+'\t'+str(time.strftime('%Y/%m/%d %H:%M:%S',time.localtime(time.time())))+'\n')
-
+    def log(self, text):
+        if (os.path.exists(self.log_dir + self.log_file) is False):
+            os.mknod(self.log_dir + self.log_file, 'rw')
+        with open(self.log_dir + self.log_file, 'a+') as logFile:
+            logFile.write(text + '\t' + str(time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(time.time()))) + '\n')
 
 
 def split_list(list, n):
@@ -170,9 +169,9 @@ def split_list(list, n):
     return lists
 
 
-if(__name__=='__main__'):
-    crawlling =crawl()
+if (__name__ == '__main__'):
+    crawlling = crawl()
     while True:
         crawlling.op_db()
         crawlling.download_all_rs()
-        time.sleep(3600*24*7)
+        time.sleep(3600 * 24 * 7)
