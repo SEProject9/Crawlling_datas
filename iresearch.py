@@ -115,11 +115,15 @@ class crawl:
 
 
     def op_db(self):
+        sql = 'Select title From industry_data_list'
+        ts=self.dbu.select(sql)
         for key in self.vid_type_map.keys():
             ls = self.get_tuplelist(self.vid_type_map[key])
             for l in ls:
                 try:
                     ##print(l)
+                    if(l[3] in l):
+                        continue
                     sql='Insert into industry_data_list(ind_id,ind_date,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')'%l
                     ##print(sql)
                     '''
