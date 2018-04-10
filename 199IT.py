@@ -172,5 +172,5 @@ class crawl:
 
 
 crawlling = crawl()
-##crawlling.init_db()
-crawlling.test()
+crawlling.init_db()
+crawlling.op_db()

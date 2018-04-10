@@ -154,8 +154,8 @@ class crawl:
                 print(e)
 
     def log(self, text):
-        if (os.path.exists(self.log_dir + self.log_file) is False):
-            os.mknod(self.log_dir + self.log_file, 'rw')
+        if (os.path.exists(self.log_dir) is False):
+            os.makedirs(self.log_dir)
         with open(self.log_dir + self.log_file, 'a+') as logFile:
             logFile.write(text + '\t' + str(time.strftime('%Y/%m/%d %H:%M:%S', time.localtime(time.time()))) + '\n')
 
