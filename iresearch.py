@@ -147,7 +147,7 @@ class crawl:
         for key in self.vid_type_map.keys():
             try:
                 sql = 'Insert into industry_list(ind_id,ind_name,ind_text) value(%d,\'%s\',\'\')' % (
-                int(key), self.vid_type_map[key])
+                    int(key), self.vid_type_map[key])
                 print(sql)
                 db_op.executeUpdate(sql)
             except pymysql.err.IntegrityError as e:

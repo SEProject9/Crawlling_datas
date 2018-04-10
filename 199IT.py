@@ -28,7 +28,8 @@ class crawl:
 
     def __init__(self):
         self.tuple_type = (
-        '互联网', 'mobile-internet', 'electronic-commerce', 'social-network', 'advertising', 'economic-data', 'service')
+            '互联网', 'mobile-internet', 'electronic-commerce', 'social-network', 'advertising', 'economic-data',
+            'service')
         self.type_id = {'互联网': 1, 'mobile-internet': 2, 'electronic-commerce': 3, 'social-network': 4, 'advertising': 5,
                         'economic-data': 6, 'service': 7}
         self.id_type = {value: key for key, value in self.type_id.items()}
@@ -96,7 +97,7 @@ class crawl:
     def save_article_content(self, content, file_name):
         if (os.path.exists(self.content_dir) is False):
             os.makedirs(self.content_dir)
-        with open(self.content_dir + file_name,'w+') as content_file:
+        with open(self.content_dir + file_name, 'w+') as content_file:
             content_file.write(content)
 
     def get_col_list(self, type, page):
@@ -115,9 +116,11 @@ class crawl:
                     continue
                 article_content = self.get_article_content(at['href'])
                 if (article_content is not 'Delete'):
-                    self.save_article_content(article_content, os.path.basename(at['href']).replace('.html','') + '.txt')
+                    self.save_article_content(article_content,
+                                              os.path.basename(at['href']).replace('.html', '') + '.txt')
                     tp = (self.type_id[type], str(time.strftime('%Y/%m/%d', time.localtime(time.time()))), at['href'],
-                          at.string, '199IT', '199IT', self.content_dir + os.path.basename(at['href']).replace('.html','') + '.txt', 'pictures')
+                          at.string, '199IT', '199IT',
+                          self.content_dir + os.path.basename(at['href']).replace('.html', '') + '.txt', 'pictures')
                     '''
                     ind_id      |   行业id
                     ind_date    |   插入时间
@@ -169,10 +172,12 @@ class crawl:
 
     def test(self):
         print(self.dbo)
-        rs=self.dbo.executeUpdate('Select ind_id From industry_list')
+        rs = self.dbo.executeUpdate('Select ind_id From industry_list')
         print(rs)
 
 
-crawlling = crawl()
-crawlling.init_db()
-crawlling.op_db()
+if (__name__ == '__main__'):
+    crawlling = crawl()
+    while True:
+        crawlling.op_db()
+        time.sleep(3600 * 24 * 7)
