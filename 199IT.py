@@ -36,7 +36,9 @@ class crawl:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.103 Safari/537.36'}
         self.content_dir = '/home/admin/199IT/'
+        self.content_dir = '/users/zhangkunwei/desktop/199IT'
         self.log_dir = '/home/admin/199IT/log/'
+        self.log_dir = '/users/zhangkunwei/desktop/199IT/log'
         self.log_file = 'log.log'
         self.dbo = crawl.db()
         self.all_info = []
@@ -115,7 +117,7 @@ class crawl:
                 if (article_content is not 'Delete'):
                     self.save_article_content(article_content, os.path.basename(at['href']).replace('.html','') + '.txt')
                     tp = (self.type_id[type], str(time.strftime('%Y/%m/%d', time.localtime(time.time()))), at['href'],
-                          at.string, '199IT', '199IT', self.content_dir + at['href'] + '.txt', 'pictures')
+                          at.string, '199IT', '199IT', self.content_dir + os.path.basename(at['href']).replace('.html','') + '.txt', 'pictures')
                     '''
                     ind_id      |   行业id
                     ind_date    |   插入时间
@@ -142,7 +144,7 @@ class crawl:
             if (l in self.all_info):
                 continue
             try:
-                sql = 'Insert into industry_info_list(ind_id,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')' % l
+                sql = 'Insert into industry_info_list(ind_id,ind_date,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')' % l
                 self.dbo.executeUpdate(sql)
             except pymysql.err.IntegrityError as e:
                 print(e)
