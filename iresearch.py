@@ -1,3 +1,5 @@
+# -*- coding=utf-8 -*-
+
 from bs4 import BeautifulSoup
 import requests
 import os
@@ -121,7 +123,7 @@ class crawl:
             ls = self.get_tuplelist(self.vid_type_map[key])
             for l in ls:
                 try:
-                    ##print(l)
+                    print(l)
                     if (l[3] in l):
                         continue
                     sql = 'Insert into industry_data_list(ind_id,ind_date,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')' % l
@@ -173,5 +175,7 @@ if (__name__ == '__main__'):
     crawlling = crawl()
     while True:
         crawlling.op_db()
+        print('op_db finish')
         crawlling.download_all_rs()
+        print('download_all_rs finish')
         time.sleep(3600 * 24 * 7)
