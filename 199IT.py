@@ -39,9 +39,7 @@ class crawl:
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.103 Safari/537.36'}
         self.content_dir = '/home/admin/199IT/'
-        self.content_dir = '/users/zhangkunwei/desktop/199IT'
         self.log_dir = '/home/admin/199IT/log/'
-        self.log_dir = '/users/zhangkunwei/desktop/199IT/log'
         self.log_file = 'log.log'
         self.dbo = crawl.db()
         self.all_info = []
