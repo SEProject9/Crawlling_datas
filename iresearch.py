@@ -124,8 +124,9 @@ class crawl:
             for l in ls:
                 try:
                     print(l)
-                    if (l[3] in l):
-                        continue
+                    for t in ts:
+                        if (l[3] == t[3]):
+                            continue
                     sql = 'Insert into industry_data_list(ind_id,ind_date,url,title,source,author,text,picture) values(%d,\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\',\'%s\')' % l
                     ##print(sql)
                     '''
