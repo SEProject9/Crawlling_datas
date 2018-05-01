@@ -86,7 +86,7 @@ class crawl:
                         if (content.string == None):
                             img = re.findall(r'src=\"(.*?)\"', str(content))
                             if (len(img) > 0 and img[0].find('Wechat') == -1):
-                                content_str += '<img src=\"' + img[0] + '\"/>' + ‘\n’
+                                content_str += '<img src=\"' + img[0] + '\"/>' + '\n'
                         ##否则，该元素是内容
                         else:
                             content_str += '\t' + str(content.string).replace('\r', '').replace('\n', '') + '\n'
